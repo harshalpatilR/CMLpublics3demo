@@ -36,6 +36,11 @@ spark = SparkSession\
     .config("spark.hadoop.fs.s3a.s3guard.ddb.region", "ap-southeast-1")\
     .getOrCreate()
 
+    
+## Spark UI
+from IPython.core.display import HTML
+HTML('<a href="http://spark-{}.{}">CLICK FOR SPARK UI</a>'.format(os.getenv("CDSW_ENGINE_ID"),os.getenv("CDSW_DOMAIN")))    
+        
 #create database
 statement = """
 CREATE DATABASE IF NOT EXISTS flight_demo_public
