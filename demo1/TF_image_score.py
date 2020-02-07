@@ -4,9 +4,11 @@
 # pip install -r /home/cdsw/utils/requirements3.txt
 # close session, start a new session in the same project
 
-MODEL_URL = 'https://ml-field.s3-us-west-2.amazonaws.com/demo/tensorflow/model/inception-2015-12-05.tgz'
+# FEB 2020 Public Bucket for this demo
+#
+MODEL_URL = 'https://harshalpatilpublic-s3.s3-us-west-2.amazonaws.com/tensorflow/model/inception-2015-12-05.tgz'
 MODEL_DIR = '/tmp/imagenet'
-IMAGE_DIR = 's3://ml-field/demo/tensorflow/data'
+IMAGE_DIR = 's3://harshalpatilpublic-s3/tensorflow/data'
 
 # Number of images per batch.
 # 1 batch corresponds to 1 RDD row.
@@ -54,7 +56,7 @@ sc = SparkSession\
     .appName("S3 Image Scoring")\
     .config("spark.executor.memory", "4g")\
     .config("spark.executor.instances", 2)\
-    .config("spark.yarn.access.hadoopFileSystems","s3a://ml-field/demo/")\
+    .config("spark.yarn.access.hadoopFileSystems","s3a://harshalpatilpublic-s3/demo/")\
     .config("spark.hadoop.fs.s3a.s3guard.ddb.region", "us-west-2")\
     .getOrCreate()._sc
 
@@ -154,11 +156,14 @@ def read_file_index_s3(img_dir):
     print("img_dir is not an S3 URL")
     exit()
   
+  print(" +++++++ BUCKET " + bucket_name )
+  print(" +++++++ PREFIX " + prefix)
   input_data = []
   ## List objects within a given prefix
   for obj in bucket.objects.filter(Delimiter='/', Prefix=prefix):
     file_name = os.path.basename(obj.key)
     #input_data.append((file_name, 's3a://' + bucket_name + '/' + obj.key))
+    print('https://' + bucket_name + '.s3-us-west-2.amazonaws.com/' + obj.key)
     input_data.append((file_name, 'https://' + bucket_name + '.s3-us-west-2.amazonaws.com/' + obj.key))
     #https://ml-field.s3-us-west-2.amazonaws.com/demo/tensorflow/data/2737866473_7958dc8760.jpg
     """Return the list without the directory name"""
